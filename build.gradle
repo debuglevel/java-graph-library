@@ -5,10 +5,22 @@ plugins {
 group 'de.debuglevel.graphlibrary'
 version '0.0.1-SNAPSHOT'
 
+apply plugin: "java-library"
+apply plugin: "maven-publish"
+
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    // Logging
+    // See http://saltnlight5.blogspot.com/2013/08/how-to-configure-slf4j-with-different.html for a quick introduction to slf4j
+    implementation 'io.github.microutils:kotlin-logging:1.6.26'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'org.slf4j:slf4j-simple:1.7.25'
+
+    // GraphViz
+    implementation 'guru.nidi:graphviz-java:0.8.8'
 }
