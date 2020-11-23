@@ -108,4 +108,30 @@ object GraphUtils {
         val successors = vertex.outEdges.map { edge -> edge.end }
         successors.forEach { succeedingVertex -> populateOrders(succeedingVertex, order + 1) }
     }
+
+    fun <T : Any> findCycles(graph: Graph<T>) {
+        logger.trace { "Finding cycles in graph..." }
+        val startVertices = getStartVertices(graph)
+        startVertices.forEach { vertex -> findCycles(vertex, listOf()) }
+        logger.trace { "Populated orders for graph" }
+    }
+
+    fun <T : Any> findCycles(vertex: Vertex<T>, visitedVertices: List<Vertex<T>>): Boolean {
+        if (visitedVertices.contains(vertex)) {
+            logger.info {
+                "Found cycle in graph while visiting '$vertex' after this path: ${
+                    visitedVertices.joinToString(
+                        ","
+                    )
+                }"
+            }
+            // return true if cycle is found
+            return true
+        }
+
+        val newVisitedVertices = listOf(*visitedVertices.toTypedArray(), vertex)
+        val successors = vertex.outEdges.map { edge -> edge.end }
+        successors.forEach { succeedingVertex -> findCycles(succeedingVertex, newVisitedVertices) }
+        return false
+    }
 }
