@@ -35,7 +35,7 @@ class Graph<T : Any> {
     override fun toString(): String {
         var s = ""
         vertices.map { vertex ->
-            s += vertex.toString()
+            s += vertex.text
             edges
                 .filter { e -> e.start == vertex }
                 .forEach { e -> s += "  ${e.end}" }

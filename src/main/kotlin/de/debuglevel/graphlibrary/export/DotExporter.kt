@@ -12,7 +12,7 @@ object DotExporter {
         var s = " digraph graphname {\n"
 
         for (vertex in graph.getVertices()) {
-            s += "${vertex.hashCode()}[label=\"$vertex\",fillcolor=${vertex.color.graphvizValue},style=filled,shape=${vertex.shape.graphvizValue},tooltip=\"${vertex.tooltip}\"];\n"
+            s += "${vertex.hashCode()}[label=\"${vertex.text}\",fillcolor=${vertex.color.graphvizValue},style=filled,shape=${vertex.shape.graphvizValue},tooltip=\"${vertex.tooltip}\"];\n"
         }
 
         for (edge in graph.getEdges()) {

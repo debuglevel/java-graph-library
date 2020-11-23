@@ -21,8 +21,9 @@ class GraphBuilder<T : Any>(
             val color = nodeInformationRetriever.getColor(node)
             val shape = nodeInformationRetriever.getShape(node)
             val tooltip: String = nodeInformationRetriever.getTooltip(node)
+            val text: String = nodeInformationRetriever.getText(node)
 
-            val vertex = Vertex(node, color, shape, tooltip)
+            val vertex = Vertex(node, color, shape, tooltip, text)
             graph.addVertex(vertex)
             vertex
         }
