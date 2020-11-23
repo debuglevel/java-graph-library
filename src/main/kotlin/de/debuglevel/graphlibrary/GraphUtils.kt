@@ -50,12 +50,16 @@ object GraphUtils {
     }
 
     fun <T : Any> getStartVertices(vertex: Vertex<T>): List<Vertex<T>> {
+        logger.trace { "Getting start vertices for vertex '$vertex'..." }
         return if (vertex.inEdges.isEmpty()) {
+            logger.trace { "Vertex '$vertex' is the start of the graph" }
             listOf(vertex)
         } else {
-            vertex.inEdges
+            val predecessors = vertex.inEdges
                 .flatMap { edge -> getStartVertices(edge.start) }
                 .distinct()
+            logger.trace { "Vertex '$vertex' is preceded by following vertices: ${predecessors.joinToString(", ")}" }
+            predecessors
         }
     }
 
@@ -69,12 +73,16 @@ object GraphUtils {
     }
 
     fun <T : Any> getEndVertices(vertex: Vertex<T>): List<Vertex<T>> {
+        logger.trace { "Getting end vertices for vertex '$vertex'..." }
         return if (vertex.outEdges.isEmpty()) {
+            logger.trace { "Vertex '$vertex' is the end of the graph" }
             listOf(vertex)
         } else {
-            vertex.outEdges
-                .flatMap { edge -> getEndVertices(edge.start) }
+            val successors = vertex.outEdges
+                .flatMap { edge -> getEndVertices(edge.end) }
                 .distinct()
+            logger.trace { "Vertex '$vertex' is preceded by following vertices: ${successors.joinToString(", ")}" }
+            successors
         }
     }
 }
