@@ -90,6 +90,10 @@ object GraphUtils {
         logger.trace { "Populating orders for graph..." }
         val startVertices = getStartVertices(graph)
         startVertices.forEach { vertex -> populateOrders(vertex, 0) }
+
+        val maximumOrder = graph.getVertices().maxOf { it.order!! }
+        graph.getVertices().forEach { it.scaledOrder = it.order!!.toDouble() / maximumOrder }
+
         logger.trace { "Populated orders for graph" }
     }
 
