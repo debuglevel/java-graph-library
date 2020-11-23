@@ -81,17 +81,19 @@ object GraphUtils {
 
     fun <T : Any> findCycles(graph: Graph<T>) {
         logger.trace { "Finding cycles in graph..." }
-        val startVertices = getStartVertices(graph)
+        val startVertices = getStartVertices(graph) // TODO: might not find isolated cycles or cycles at the start
         startVertices.forEach { vertex -> findCycles(vertex, listOf()) }
         logger.trace { "Populated orders for graph" }
     }
 
     fun <T : Any> findCycles(vertex: Vertex<T>, visitedVertices: List<Vertex<T>>): Boolean {
+        val newVisitedVertices = listOf(*visitedVertices.toTypedArray(), vertex)
+
         if (visitedVertices.contains(vertex)) {
             logger.info {
-                "Found cycle in graph while visiting '$vertex' after this path: ${
-                    visitedVertices.joinToString(
-                        ","
+                "Found cycle in graph while visiting '$vertex' in this path: ${
+                    newVisitedVertices.joinToString(
+                        "→"
                     )
                 }"
             }
@@ -99,7 +101,6 @@ object GraphUtils {
             return true
         }
 
-        val newVisitedVertices = listOf(*visitedVertices.toTypedArray(), vertex)
         val successors = vertex.outEdges.map { edge -> edge.end }
         successors.forEach { succeedingVertex -> findCycles(succeedingVertex, newVisitedVertices) }
         return false
