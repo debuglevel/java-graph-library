@@ -16,6 +16,7 @@ class GraphBuilder<T : Any>(
 
         val graph = Graph<T>()
 
+        // build all vertices (defined by the given list of nodes)
         val vertices = nodes.map { node ->
             val color = nodeInformationRetriever.getColor(node)
             val shape = nodeInformationRetriever.getShape(node)
@@ -26,6 +27,7 @@ class GraphBuilder<T : Any>(
             vertex
         }
 
+        // add edges between vertices (defined by the NodeInformationRetriever which knows how to get predecessors and successors)
         for (vertex in vertices) {
             nodeInformationRetriever.getPrecedingVertices(vertex, vertices)
                 .forEach { precedingVertex -> graph.addEdge(Edge(precedingVertex, vertex)) }
@@ -34,6 +36,7 @@ class GraphBuilder<T : Any>(
                 .forEach { succeedingVertex -> graph.addEdge(Edge(vertex, succeedingVertex)) }
         }
 
+        // remove redundant edges (if wanted)
         if (transitiveReduction) {
             val duration = measureTimeMillis { TransitiveReduction.reduce(graph) }
             logger.debug { "Removing superseded edges took ${duration}ms" }
