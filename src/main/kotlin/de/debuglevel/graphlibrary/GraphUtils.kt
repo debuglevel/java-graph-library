@@ -85,4 +85,23 @@ object GraphUtils {
             successors
         }
     }
+
+    fun <T : Any> populateOrders(graph: Graph<T>) {
+        logger.trace { "Populating orders for graph..." }
+        val startVertices = getStartVertices(graph)
+        startVertices.forEach { vertex -> populateOrders(vertex, 0) }
+        logger.trace { "Populated orders for graph" }
+    }
+
+    fun <T : Any> populateOrders(vertex: Vertex<T>, order: Int) {
+        if (vertex.order == null || vertex.order!! < order) {
+            logger.trace { "Populating order for vertex '$vertex' with '$order'..." }
+            vertex.order = order
+        } else {
+            logger.trace { "Skipping populating order for vertex '$vertex' with '$order' because it is already higher (${vertex.order})..." }
+        }
+
+        val successors = vertex.outEdges.map { edge -> edge.end }
+        successors.forEach { succeedingVertex -> populateOrders(succeedingVertex, order + 1) }
+    }
 }

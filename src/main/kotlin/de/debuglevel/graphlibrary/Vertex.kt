@@ -5,7 +5,8 @@ data class Vertex<T>(
     val color: Color,
     val shape: Shape,
     val tooltip: String,
-    val text: String
+    val text: String,
+    var order: Int? = null
 ) {
     val outEdges = hashSetOf<Edge<T>>()
     val inEdges = hashSetOf<Edge<T>>()
