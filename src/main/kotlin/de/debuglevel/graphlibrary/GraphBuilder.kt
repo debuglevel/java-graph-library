@@ -3,11 +3,17 @@ package de.debuglevel.graphlibrary
 import mu.KotlinLogging
 import kotlin.system.measureTimeMillis
 
+/**
+ * Builds a graph by retrieving information through a NodeInformationRetriever
+ */
 class GraphBuilder<T : Any>(
     private val nodeInformationRetriever: NodeInformationRetriever<T>
 ) {
     private val logger = KotlinLogging.logger {}
 
+    /**
+     * Build the graph
+     */
     fun build(
         nodes: List<T>,
         transitiveReduction: Boolean

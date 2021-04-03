@@ -1,5 +1,8 @@
 package de.debuglevel.graphlibrary
 
+/**
+ * A NodeInformationRetriever defines how to derive graph data from other data structures.
+ */
 interface NodeInformationRetriever<T> {
     fun getColor(node: T): Color
     fun getShape(node: T): Shape

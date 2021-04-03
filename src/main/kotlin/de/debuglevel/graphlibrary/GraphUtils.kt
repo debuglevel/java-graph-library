@@ -40,6 +40,9 @@ object GraphUtils {
         }
     }
 
+    /**
+     * Get all vertices which have no incoming edge
+     */
     fun <T : Any> getStartVertices(graph: Graph<T>): List<Vertex<T>> {
         logger.trace { "Getting start vertices for graph..." }
         val startVertices = graph.getVertices()
@@ -48,6 +51,9 @@ object GraphUtils {
         return startVertices
     }
 
+    /**
+     * Get all vertices which have no outgoing edge
+     */
     fun <T : Any> getEndVertices(graph: Graph<T>): List<Vertex<T>> {
         logger.trace { "Getting end vertices for graph..." }
         val endVertices = graph.getVertices()
@@ -56,6 +62,9 @@ object GraphUtils {
         return endVertices
     }
 
+    /**
+     * Assign ascending numbers from start vertices to end vertices.
+     */
     fun <T : Any> populateOrders(graph: Graph<T>) {
         logger.trace { "Populating orders for graph..." }
         val startVertices = getStartVertices(graph)
@@ -83,9 +92,12 @@ object GraphUtils {
         logger.trace { "Finding cycles in graph..." }
         val startVertices = getStartVertices(graph) // TODO: might not find isolated cycles or cycles at the start
         startVertices.forEach { vertex -> findCycles(vertex, listOf()) }
-        logger.trace { "Populated orders for graph" }
+        logger.trace { "Found cycles in graph" }
     }
 
+    /**
+     * Search for cycles
+     */
     fun <T : Any> findCycles(vertex: Vertex<T>, visitedVertices: List<Vertex<T>>): Boolean {
         val newVisitedVertices = listOf(*visitedVertices.toTypedArray(), vertex)
 

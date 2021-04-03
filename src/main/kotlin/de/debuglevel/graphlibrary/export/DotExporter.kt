@@ -3,9 +3,15 @@ package de.debuglevel.graphlibrary.export
 import de.debuglevel.graphlibrary.Graph
 import mu.KotlinLogging
 
+/**
+ * Exports the graph to a graphviz dot file
+ */
 object DotExporter {
     private val logger = KotlinLogging.logger {}
 
+    /**
+     * Generate the dot content.
+     */
     fun generate(graph: Graph<*>): String {
         logger.debug { "Generating GraphViz dot source..." }
 
