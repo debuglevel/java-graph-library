@@ -10,6 +10,9 @@ buildscript {
 
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+
+    // Release version with "./gradlew release"
+    id 'net.researchgate.release'
 }
 
 group 'de.debuglevel.graphlibrary'
