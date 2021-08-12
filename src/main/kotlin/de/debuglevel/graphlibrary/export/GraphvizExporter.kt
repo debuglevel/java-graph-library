@@ -20,7 +20,7 @@ object GraphvizExporter {
     fun render(dot: String, outputStream: OutputStream, format: Format) {
         logger.debug { "Rendering graph visualization to OutputStream '$outputStream'..." }
 
-        val graph = guru.nidi.graphviz.parse.Parser.read(dot)
+        val graph = guru.nidi.graphviz.parse.Parser().read(dot)
         Graphviz
             .fromGraph(graph)
             .render(format)
