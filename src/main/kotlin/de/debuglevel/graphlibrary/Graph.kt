@@ -8,21 +8,21 @@ import mu.KotlinLogging
 class Graph<T : Any> {
     private val logger = KotlinLogging.logger {}
 
-    private val vertices = mutableSetOf<Vertex<T>>()
-    private val edges = mutableSetOf<Edge<T>>()
+    private val _vertices = mutableSetOf<Vertex<T>>()
+    private val _edges = mutableSetOf<Edge<T>>()
 
     /**
      * Add a vertex to the graph.
      */
     fun addVertex(vertex: Vertex<T>) {
-        vertices.add(vertex)
+        _vertices.add(vertex)
     }
 
     /**
      * Add an edge
      */
     fun addEdge(edge: Edge<T>) {
-        edges.add(edge)
+        _edges.add(edge)
         edge.start.outEdges.add(edge)
         edge.end.inEdges.add(edge)
     }
@@ -31,7 +31,7 @@ class Graph<T : Any> {
      * Remove an edge
      */
     fun removeEdge(edge: Edge<T>) {
-        edges.remove(edge)
+        _edges.remove(edge)
         edge.start.outEdges.remove(edge)
         edge.end.inEdges.remove(edge)
     }
@@ -39,27 +39,29 @@ class Graph<T : Any> {
     /**
      * Gat all edges
      */
-    fun getEdges(): Set<Edge<T>> {
-        return edges.toSet()
-    }
+    val edges: Set<Edge<T>>
+        get() {
+            return _edges.toSet()
+        }
 
     /**
      * Get all vertices
      */
-    fun getVertices(): Set<Vertex<T>> {
-        return vertices.toSet()
-    }
+    val vertices: Set<Vertex<T>>
+        get() {
+            return _vertices.toSet()
+        }
 
     /**
      * Get a string representation of the graph
      */
     override fun toString(): String {
         var s = ""
-        vertices.map { vertex ->
+        _vertices.map { vertex ->
             s += vertex.text + " → "
-            edges
-                .filter { e -> e.start == vertex }
-                .map { it.end }
+            _edges
+                .filter { edge -> edge.start == vertex }
+                .map { edge -> edge.end }
                 .joinToString("|")
             "$s\n"
         }

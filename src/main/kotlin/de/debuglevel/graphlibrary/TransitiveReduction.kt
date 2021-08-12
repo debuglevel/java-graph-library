@@ -12,7 +12,7 @@ object TransitiveReduction {
     fun <T : Any> reduce(graph: Graph<T>) {
         logger.debug { "Performing transitive reduction on graph..." }
 
-        for (edge in graph.getEdges()) {
+        for (edge in graph.edges) {
             if (GraphUtils.pathExists(edge.start, edge.end, edge)) {
                 graph.removeEdge(edge)
                 logger.debug { "Removed superseded edge: $edge" }

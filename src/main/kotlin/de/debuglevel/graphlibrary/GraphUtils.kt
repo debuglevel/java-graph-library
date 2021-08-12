@@ -45,7 +45,7 @@ object GraphUtils {
      */
     fun <T : Any> getStartVertices(graph: Graph<T>): List<Vertex<T>> {
         logger.trace { "Getting start vertices for graph..." }
-        val startVertices = graph.getVertices()
+        val startVertices = graph.vertices
             .filter { it.inEdges.count() == 0 }
         logger.trace { "Got ${startVertices.count()} start vertices for graph" }
         return startVertices
@@ -56,7 +56,7 @@ object GraphUtils {
      */
     fun <T : Any> getEndVertices(graph: Graph<T>): List<Vertex<T>> {
         logger.trace { "Getting end vertices for graph..." }
-        val endVertices = graph.getVertices()
+        val endVertices = graph.vertices
             .filter { it.outEdges.count() == 0 }
         logger.trace { "Got ${endVertices.count()} end vertices for graph" }
         return endVertices
@@ -70,8 +70,8 @@ object GraphUtils {
         val startVertices = getStartVertices(graph)
         startVertices.forEach { vertex -> populateOrders(vertex, 0) }
 
-        val maximumOrder = graph.getVertices().maxOf { it.order!! }
-        graph.getVertices().forEach { it.scaledOrder = it.order!!.toDouble() / maximumOrder }
+        val maximumOrder = graph.vertices.maxOf { it.order!! }
+        graph.vertices.forEach { it.scaledOrder = it.order!!.toDouble() / maximumOrder }
 
         logger.trace { "Populated orders for graph" }
     }

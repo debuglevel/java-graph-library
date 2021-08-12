@@ -17,11 +17,11 @@ object DotExporter {
 
         var s = " digraph graphname {\n"
 
-        for (vertex in graph.getVertices()) {
+        for (vertex in graph.vertices) {
             s += "${vertex.hashCode()}[label=\"${vertex.text}\",fillcolor=${vertex.color.graphvizValue},style=filled,shape=${vertex.shape.graphvizValue},tooltip=\"${vertex.tooltip}\"];\n"
         }
 
-        for (edge in graph.getEdges()) {
+        for (edge in graph.edges) {
             s += "${edge.start.hashCode()} -> ${edge.end.hashCode()};\n"
         }
 
