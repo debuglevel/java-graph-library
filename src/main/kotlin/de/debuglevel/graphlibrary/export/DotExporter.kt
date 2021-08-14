@@ -1,6 +1,7 @@
 package de.debuglevel.graphlibrary.export
 
 import de.debuglevel.graphlibrary.Graph
+import de.debuglevel.graphlibrary.Vertex
 import mu.KotlinLogging
 
 /**
@@ -18,7 +19,8 @@ object DotExporter {
         var s = " digraph graphname {\n"
 
         for (vertex in graph.vertices) {
-            s += "${vertex.hashCode()}[label=\"${vertex.text}\",fillcolor=${vertex.color.graphvizValue},style=filled,shape=${vertex.shape.graphvizValue},tooltip=\"${vertex.tooltip}\"];\n"
+            val attributesString = builtAttributes(vertex)
+            s += "${vertex.hashCode()}[$attributesString];\n"
         }
 
         for (edge in graph.edges) {
@@ -29,5 +31,22 @@ object DotExporter {
 
         logger.debug { "Generating GraphViz dot source done." }
         return s
+    }
+
+    private fun builtAttributes(vertex: Vertex<out Any>): String {
+        val attributes = mapOf(
+            "label" to "\"${vertex.text}\"",
+            "fillcolor" to vertex.color.graphvizValue,
+            "style" to "filled",
+            "shape" to vertex.shape.graphvizValue,
+            "tooltip" to "${vertex.tooltip}"
+        )
+
+        val attributesString = attributes
+            .filter { it.value.isNotEmpty() }
+            .map { "${it.key}=${it.value}" }
+            .joinToString(",")
+
+        return attributesString
     }
 }

@@ -23,7 +23,7 @@ object TestDataProvider {
     fun getTwoStartsGraph(): Graph<String> {
         val graph = getTwoStepGraph()
         val vertex2 = graph.vertices.single { it.content == "Vertex2" }
-        val vertex4 = Vertex(content = "Vertex4", color = Color.Blue, Shape.Ellipse, tooltip = "", text = "Vertex4")
+        val vertex4 = Vertex(content = "Vertex4", text = "Vertex4", tooltip = "", color = Color.Blue, Shape.Ellipse)
         graph.addVertex(vertex4)
 
         val edge4to2 = Edge(vertex4, vertex2)
@@ -39,7 +39,7 @@ object TestDataProvider {
     fun getTwoEndsGraph(): Graph<String> {
         val graph = getTwoStepGraph()
         val vertex2 = graph.vertices.single { it.content == "Vertex2" }
-        val vertex4 = Vertex(content = "Vertex4", color = Color.Blue, Shape.Ellipse, tooltip = "", text = "Vertex4")
+        val vertex4 = Vertex(content = "Vertex4", text = "Vertex4", tooltip = "", color = Color.Blue, Shape.Ellipse)
         graph.addVertex(vertex4)
 
         val edge2to4 = Edge(vertex2, vertex4)
@@ -83,9 +83,9 @@ object TestDataProvider {
      */
     fun getTwoStepGraph(): Graph<String> {
         val graph = Graph<String>()
-        val vertex1 = Vertex(content = "Vertex1", color = Color.Blue, Shape.Ellipse, tooltip = "", text = "Vertex1")
-        val vertex2 = Vertex(content = "Vertex2", color = Color.Blue, Shape.Ellipse, tooltip = "", text = "Vertex2")
-        val vertex3 = Vertex(content = "Vertex3", color = Color.Blue, Shape.Ellipse, tooltip = "", text = "Vertex3")
+        val vertex1 = Vertex(content = "Vertex1", text = "Vertex1", tooltip = "", color = Color.Blue, Shape.Ellipse)
+        val vertex2 = Vertex(content = "Vertex2", text = "Vertex2", tooltip = "", color = Color.Blue, Shape.Ellipse)
+        val vertex3 = Vertex(content = "Vertex3", text = "Vertex3", tooltip = "", color = Color.Blue, Shape.Ellipse)
         val vertices = listOf(vertex1, vertex2, vertex3)
         vertices.forEach { graph.addVertex(it) }
 

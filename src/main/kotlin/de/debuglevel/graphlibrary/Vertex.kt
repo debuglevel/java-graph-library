@@ -10,10 +10,10 @@ package de.debuglevel.graphlibrary
  */
 data class Vertex<T>(
     val content: T,
-    val color: Color,
-    val shape: Shape,
-    val tooltip: String,
     val text: String,
+    val tooltip: String?,
+    val color: Color = Color.Gray,
+    val shape: Shape = Shape.Rectangle,
     var order: Int? = null,
     var scaledOrder: Double? = null
 ) {
