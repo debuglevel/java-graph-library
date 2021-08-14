@@ -6,9 +6,9 @@ object GraphUtils {
     private val logger = KotlinLogging.logger {}
 
     /**
-     * Whether another path between start and end (other than the given ignoredEdge) exists.
+     * Whether a path between start and end (other than the ignoredEdge, if given) exists.
      */
-    fun <T : Any> pathExists(start: Vertex<T>, end: Vertex<T>, ignoredEdge: Edge<T>) =
+    fun <T : Any> pathExists(start: Vertex<T>, end: Vertex<T>, ignoredEdge: Edge<T>?) =
         findVertex(start, end, ignoredEdge)
 
     /**
@@ -76,7 +76,7 @@ object GraphUtils {
         logger.trace { "Populated orders for graph" }
     }
 
-    fun <T : Any> populateOrders(vertex: Vertex<T>, order: Int) {
+    private fun <T : Any> populateOrders(vertex: Vertex<T>, order: Int) {
         if (vertex.order == null || vertex.order!! < order) {
             logger.trace { "Populating order for vertex '$vertex' with '$order'..." }
             vertex.order = order
@@ -88,25 +88,34 @@ object GraphUtils {
         successors.forEach { succeedingVertex -> populateOrders(succeedingVertex, order + 1) }
     }
 
-    fun <T : Any> findCycles(graph: Graph<T>) {
-        logger.trace { "Finding cycles in graph..." }
-        val startVertices = getStartVertices(graph) // TODO: might not find isolated cycles or cycles at the start
-        startVertices.forEach { vertex -> findCycles(vertex, listOf()) }
-        logger.trace { "Found cycles in graph" }
-    }
-
     /**
      * Search for cycles
      */
-    fun <T : Any> findCycles(vertex: Vertex<T>, visitedVertices: List<Vertex<T>>): Boolean {
+    fun <T : Any> findCycles(graph: Graph<T>): Boolean {
+        logger.trace { "Searching cycles in graph..." }
+        var startVertices =
+            getStartVertices(graph) // TODO: might not find isolated cycles or graphs that only consist of 1 circle
+
+        if (startVertices.isEmpty() && graph.vertices.any()) {
+            // of no start vertex is found but the graph actually has vertices, just pick a random one
+            // (although this is probably always due to a cyclic graph; could return true therefore as a shortcut)
+            startVertices = listOf(graph.vertices.random())
+        }
+
+        val cyclesFound = startVertices.map { vertex -> findCycles(vertex, listOf()) }
+            .any { it }
+        logger.trace { "Searched cycles in graph: $cyclesFound" }
+        return cyclesFound
+    }
+
+    private fun <T : Any> findCycles(vertex: Vertex<T>, visitedVertices: List<Vertex<T>>): Boolean {
         val newVisitedVertices = listOf(*visitedVertices.toTypedArray(), vertex)
 
+        // check if current visited vertex was already visited before
         if (visitedVertices.contains(vertex)) {
             logger.info {
                 "Found cycle in graph while visiting '$vertex' in this path: ${
-                    newVisitedVertices.joinToString(
-                        "→"
-                    )
+                    newVisitedVertices.joinToString("→")
                 }"
             }
             // return true if cycle is found
@@ -114,7 +123,8 @@ object GraphUtils {
         }
 
         val successors = vertex.outEdges.map { edge -> edge.end }
-        successors.forEach { succeedingVertex -> findCycles(succeedingVertex, newVisitedVertices) }
-        return false
+        val cyclesFound = successors.map { succeedingVertex -> findCycles(succeedingVertex, newVisitedVertices) }
+            .any { it }
+        return cyclesFound
     }
 }
