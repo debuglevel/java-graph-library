@@ -13,6 +13,9 @@ plugins {
 
     // Release version with "./gradlew release"
     id 'net.researchgate.release'
+
+    // Kotlin annotations processor (needed by Micronaut)
+    id 'org.jetbrains.kotlin.kapt'
 }
 
 group 'de.debuglevel.graphlibrary'
@@ -31,11 +34,27 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 
+    // Tests
+    /// JUnit
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    /// Mockito
+    //testImplementation "org.mockito:mockito-junit-jupiter:$mockitoJunitJupiterVersion"
+    /// Assertions
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+
     // Logging
     // See http://saltnlight5.blogspot.com/2013/08/how-to-configure-slf4j-with-different.html for a quick introduction to slf4j
     implementation 'io.github.microutils:kotlin-logging:1.6.26'
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
+
+    // Micronaut Bill of Materials, which defines dependency versions
+    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
+    kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
 
     // GraphViz
     api 'guru.nidi:graphviz-java:0.18.1'
@@ -44,6 +63,18 @@ dependencies {
 ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
 ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
 ext["signing.secretKeyRingFile"] = System.getenv('SIGNING_SECRET_KEY_RING_FILE')
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    reports {
+        html.enabled = true
+    }
+}
 
 // Configuration of net.researchgate.release plugin
 release {
