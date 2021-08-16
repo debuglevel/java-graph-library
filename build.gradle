@@ -23,7 +23,7 @@ version '0.0.1-SNAPSHOT'
 
 apply plugin: "java-library"
 apply plugin: "maven-publish"
-apply plugin: "maven"
+//apply plugin: "maven"
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.vanniktech.maven.publish'
 
