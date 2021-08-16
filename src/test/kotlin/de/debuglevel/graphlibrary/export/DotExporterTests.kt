@@ -1,7 +1,6 @@
 package de.debuglevel.graphlibrary.export
 
 import de.debuglevel.graphlibrary.*
-import io.micronaut.core.type.Argument.listOf
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

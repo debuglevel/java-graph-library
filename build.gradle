@@ -36,10 +36,10 @@ dependencies {
 
     // Tests
     /// JUnit
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-    testImplementation "org.junit.jupiter:junit-jupiter-params"
-    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.2"
+    //testImplementation "io.micronaut.test:micronaut-test-junit5"
     /// Mockito
     //testImplementation "org.mockito:mockito-junit-jupiter:$mockitoJunitJupiterVersion"
     /// Assertions
@@ -51,10 +51,10 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
 
-    // Micronaut Bill of Materials, which defines dependency versions
-    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-    kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
-    kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
+//    // Micronaut Bill of Materials, which defines dependency versions
+//    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+//    kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
+//    kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
 
     // GraphViz
     api 'guru.nidi:graphviz-java:0.18.1'
