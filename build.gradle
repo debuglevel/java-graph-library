@@ -3,28 +3,60 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin"
+
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.17"
         classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
     }
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
-
-    // Release version with "./gradlew release"
-    id 'net.researchgate.release'
+    id 'java'
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
 
     // Kotlin annotations processor (needed by Micronaut)
     id 'org.jetbrains.kotlin.kapt'
+
+    // Needed for Bean Validation https://docs.micronaut.io/latest/guide/index.html#beanValidation.
+    // Unsure, if there is another reason for it.
+    // TODO: configure allopen to only open @Validated classes
+    id 'org.jetbrains.kotlin.plugin.allopen'
+
+    // Check updated dependencies with "./gradlew dependencyUpdates".
+    id 'com.github.ben-manes.versions'
+
+    // Release version with "./gradlew release".
+    id 'net.researchgate.release'
+
+    //// Create start scripts; is executed on "build" task but not on e.g. "jar" task.
+    //id 'application'
+
+    // Bundle all dependencies into one fat shadowed jar.
+    // (Gets automatically triggered when application plugin is present)
+    id 'com.github.johnrengelman.shadow'
+
+    // Add no-argument constructors as they are needed for JPA (see https://kotlinlang.org/docs/reference/compiler-plugins.html#jpa-support).
+    id "org.jetbrains.kotlin.plugin.jpa"
+
+    //// Plugin for gRPC protobuf generation
+    //id 'com.google.protobuf'
+
+    // List all licenses in "build/reports/dependency-license" with "./gradlew generateLicenseReport".
+    id 'com.github.jk1.dependency-license-report'
+
+    id "org.jetbrains.dokka"
+
+    id 'maven-publish'
 }
 
 group 'de.debuglevel.graphlibrary'
-version '0.0.1-SNAPSHOT'
+version '0.0.7-SNAPSHOT'
 
-apply plugin: "java-library"
-apply plugin: "maven-publish"
+//apply plugin: "java-library"
+//apply plugin: "maven-publish"
 //apply plugin: "maven"
-apply plugin: 'org.jetbrains.dokka'
+//apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.vanniktech.maven.publish'
 
 repositories {
@@ -32,10 +64,18 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    // If no specific version is defined, it might be provided by the Micronaut BOM
+
+    // Kotlin
+    /// provide kotlin-reflect although not used, as the jackson-kotlin module might provide its own, but maybe for an earlier Kotlin version, which would mess up things (or at least yield warnings).
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
 
     // Tests
     /// JUnit
+//    testImplementation "org.junit.jupiter:junit-jupiter-api"
+//    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+//    testImplementation "org.junit.jupiter:junit-jupiter-params"
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.2"
     testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.2"
@@ -47,9 +87,9 @@ dependencies {
 
     // Logging
     // See http://saltnlight5.blogspot.com/2013/08/how-to-configure-slf4j-with-different.html for a quick introduction to slf4j
-    implementation 'io.github.microutils:kotlin-logging:1.6.26'
-    implementation 'org.slf4j:slf4j-api:1.7.25'
-    implementation 'org.slf4j:slf4j-simple:1.7.25'
+    implementation "io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion"
+    runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
+    runtimeOnly "net.logstash.logback:logstash-logback-encoder:$logstashLogbackVersion"
 
 //    // Micronaut Bill of Materials, which defines dependency versions
 //    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
@@ -57,12 +97,36 @@ dependencies {
 //    kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
 
     // GraphViz
-    api 'guru.nidi:graphviz-java:0.18.1'
+    api "guru.nidi:graphviz-java:$nidiGraphvizVersion"
+}
+
+// Java configuration
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8 // Source is Java 8 code
+    targetCompatibility = JavaVersion.VERSION_1_8 // Byte code will be JVM 8
+}
+
+// Kotlin configuration (implies compileKotlin and compileTestKotlin)
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8 // Byte code will be JVM 8
+        // retain parameter names for Java reflection
+        javaParameters = true
+    }
 }
 
 ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
 ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
 ext["signing.secretKeyRingFile"] = System.getenv('SIGNING_SECRET_KEY_RING_FILE')
+
+// Configuration of net.researchgate.release plugin
+release {
+    failOnCommitNeeded = true // fail because changed files would be committed automatically
+    failOnUnversionedFiles = false // don't fail because unversioned files would not be committed automatically
+    git {
+        requireBranch = 'main'
+    }
+}
 
 test {
     useJUnitPlatform()
@@ -76,11 +140,17 @@ test {
     }
 }
 
-// Configuration of net.researchgate.release plugin
-release {
-    failOnCommitNeeded = true // fail because changed files would be committed automatically
-    failOnUnversionedFiles = false // don't fail because unversioned files would not be committed automatically
-    git {
-        requireBranch = 'main'
+
+// Filter out beta versions et cetera on dependency update check.
+dependencyUpdates.resolutionStrategy {
+    componentSelection { rules ->
+        rules.all { ComponentSelection selection ->
+            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'ea', 'pr'].any { qualifier ->
+                selection.candidate.version ==~ /(?i).*[.-]$qualifier[.\d-+]*/
+            }
+            if (rejected) {
+                selection.reject('Release candidate')
+            }
+        }
     }
 }
