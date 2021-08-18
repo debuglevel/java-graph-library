@@ -53,7 +53,7 @@ plugins {
 }
 
 group 'de.debuglevel.graphlibrary'
-version '0.0.7-SNAPSHOT'
+//version '0.0.7-SNAPSHOT'
 
 //apply plugin: "java-library"
 //apply plugin: "maven-publish"
