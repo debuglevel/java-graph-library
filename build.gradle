@@ -73,12 +73,12 @@ dependencies {
 
     // Tests
     /// JUnit
-//    testImplementation "org.junit.jupiter:junit-jupiter-api"
-//    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-//    testImplementation "org.junit.jupiter:junit-jupiter-params"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.2"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+//    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
+//    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.2"
+//    testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.2"
     //testImplementation "io.micronaut.test:micronaut-test-junit5"
     /// Mockito
     //testImplementation "org.mockito:mockito-junit-jupiter:$mockitoJunitJupiterVersion"
@@ -91,10 +91,10 @@ dependencies {
     runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
     runtimeOnly "net.logstash.logback:logstash-logback-encoder:$logstashLogbackVersion"
 
-//    // Micronaut Bill of Materials, which defines dependency versions
-//    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-//    kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
-//    kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
+    // Micronaut Bill of Materials, which defines dependency versions
+    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
+    kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
 
     // GraphViz
     api "guru.nidi:graphviz-java:$nidiGraphvizVersion"
