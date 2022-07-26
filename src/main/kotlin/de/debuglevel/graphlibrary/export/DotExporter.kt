@@ -35,7 +35,7 @@ object DotExporter {
 
     private fun buildAttributes(vertex: Vertex<out Any>): String {
         val attributes = mapOf(
-            "label" to "\"${vertex.text}\"",
+            "label" to vertex.text,
             "fillcolor" to vertex.color.graphvizValue,
             "style" to "filled",
             "shape" to vertex.shape.graphvizValue,
@@ -44,7 +44,7 @@ object DotExporter {
 
         val attributesString = attributes
             .filter { it.value.isNotEmpty() }
-            .map { "${it.key}=${escape(it.value)}" }
+            .map { "${it.key}=\"${escape(it.value)}\"" }
             .joinToString(",")
 
         return attributesString
