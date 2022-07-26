@@ -44,9 +44,18 @@ object DotExporter {
 
         val attributesString = attributes
             .filter { it.value.isNotEmpty() }
-            .map { "${it.key}=${it.value}" }
+            .map { "${it.key}=${escape(it.value)}" }
             .joinToString(",")
 
         return attributesString
+    }
+
+    /**
+     * Escapes strings according to <https://graphviz.org/doc/info/lang.html> which
+     * is actually only that a `"` must be `\"` instead. Nothing further has to be
+     * escaped, and even `\\` remains `\\`.
+     */
+    private fun escape(str: String): String {
+        return str.replace("\"", "\\\"")
     }
 }
