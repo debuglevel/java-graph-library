@@ -3,7 +3,7 @@ package de.debuglevel.graphlibrary
 import mu.KotlinLogging
 
 /**
- * A graph containing vertices connected by edges.
+ * A graph contains [Vertices](Vertex) connected by [Edge]s.
  */
 class Graph<T : Any> {
     private val logger = KotlinLogging.logger {}
@@ -12,14 +12,14 @@ class Graph<T : Any> {
     private val _edges = mutableSetOf<Edge<T>>()
 
     /**
-     * Add a vertex to the graph.
+     * Adds a [Vertex] to the [Graph].
      */
     fun addVertex(vertex: Vertex<T>) {
         _vertices.add(vertex)
     }
 
     /**
-     * Add an edge
+     * Adds an [Edge].
      */
     fun addEdge(edge: Edge<T>) {
         _edges.add(edge)
@@ -28,7 +28,7 @@ class Graph<T : Any> {
     }
 
     /**
-     * Remove an edge
+     * Removes an [Edge].
      */
     fun removeEdge(edge: Edge<T>) {
         _edges.remove(edge)
@@ -37,7 +37,7 @@ class Graph<T : Any> {
     }
 
     /**
-     * Gat all edges
+     * Gat all [Edge]s.
      */
     val edges: Set<Edge<T>>
         get() {
@@ -45,7 +45,7 @@ class Graph<T : Any> {
         }
 
     /**
-     * Get all vertices
+     * Gets all [Vertices](Vertex).
      */
     val vertices: Set<Vertex<T>>
         get() {
@@ -53,7 +53,7 @@ class Graph<T : Any> {
         }
 
     /**
-     * Get a string representation of the graph
+     * Gets a string representation of the [Graph].
      */
     override fun toString(): String {
         var s = ""

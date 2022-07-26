@@ -5,21 +5,21 @@ import de.debuglevel.graphlibrary.Vertex
 import mu.KotlinLogging
 
 /**
- * Exports the graph to a graphviz dot file
+ * Exports a [Graph] to a GraphViz DOT file.
  */
 object DotExporter {
     private val logger = KotlinLogging.logger {}
 
     /**
-     * Generate the dot content.
+     * Generates the DOT content of a [graph].
      */
     fun generate(graph: Graph<*>): String {
-        logger.debug { "Generating GraphViz dot source..." }
+        logger.debug { "Generating GraphViz DOT source..." }
 
         var s = " digraph graphname {\n"
 
         for (vertex in graph.vertices) {
-            val attributesString = builtAttributes(vertex)
+            val attributesString = buildAttributes(vertex)
             s += "${vertex.hashCode()}[$attributesString];\n"
         }
 
@@ -29,11 +29,11 @@ object DotExporter {
 
         s += "}\n"
 
-        logger.debug { "Generating GraphViz dot source done." }
+        logger.debug { "Generated GraphViz DOT source" }
         return s
     }
 
-    private fun builtAttributes(vertex: Vertex<out Any>): String {
+    private fun buildAttributes(vertex: Vertex<out Any>): String {
         val attributes = mapOf(
             "label" to "\"${vertex.text}\"",
             "fillcolor" to vertex.color.graphvizValue,

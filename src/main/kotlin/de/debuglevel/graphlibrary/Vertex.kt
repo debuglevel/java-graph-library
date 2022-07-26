@@ -1,12 +1,10 @@
 package de.debuglevel.graphlibrary
 
 /**
- * A vertex/node containing an object of type T
- * @param T the type of the content
- * @param color the background color of the vertex when visualized
- * @param shape the shape of the vertex when visualized
- * @param tooltip tooltip of the vertex when rendered in appropriate format
- * @param text text to place in the vertex
+ * A [Vertex]/node containing an object of type [T].
+ * When visualized, the following attributes are used:
+ * A [text] is placed inside the [Vertex]. It has a background [color] and a [shape].
+ * A [tooltip] may be displayed on mouse hover (e.g. when using SVG).
  */
 data class Vertex<T>(
     val content: T,

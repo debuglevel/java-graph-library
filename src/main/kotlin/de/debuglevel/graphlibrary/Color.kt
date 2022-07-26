@@ -1,7 +1,7 @@
 package de.debuglevel.graphlibrary
 
 /**
- * Some colors of graphviz which can be used
+ * Some colors of graphviz which can be used.
  */
 enum class Color(val graphvizValue: String) {
     Green("palegreen1"),

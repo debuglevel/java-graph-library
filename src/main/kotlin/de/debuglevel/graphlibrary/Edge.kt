@@ -1,7 +1,7 @@
 package de.debuglevel.graphlibrary
 
 /**
- * An edge connecting two vertices.
+ * An edge connects two [Vertices](Vertex).
  */
 data class Edge<T>(
     val start: Vertex<T>,

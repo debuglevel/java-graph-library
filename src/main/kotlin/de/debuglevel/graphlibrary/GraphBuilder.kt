@@ -4,7 +4,7 @@ import mu.KotlinLogging
 import kotlin.system.measureTimeMillis
 
 /**
- * Builds a graph by retrieving information through a NodeInformationRetriever
+ * Builds a [Graph] by retrieving information through a [NodeInformationRetriever].
  */
 class GraphBuilder<T : Any>(
     private val nodeInformationRetriever: NodeInformationRetriever<T>
@@ -12,7 +12,7 @@ class GraphBuilder<T : Any>(
     private val logger = KotlinLogging.logger {}
 
     /**
-     * Build the graph
+     * Builds the [Graph].
      */
     fun build(
         nodes: List<T>,
@@ -22,7 +22,7 @@ class GraphBuilder<T : Any>(
 
         val graph = Graph<T>()
 
-        // build all vertices (defined by the given list of nodes)
+        // Build all vertices (defined by the given list of nodes)
         val vertices = nodes.map { node ->
             val color = nodeInformationRetriever.getColor(node)
             val shape = nodeInformationRetriever.getShape(node)
@@ -34,7 +34,7 @@ class GraphBuilder<T : Any>(
             vertex
         }
 
-        // add edges between vertices (defined by the NodeInformationRetriever which knows how to get predecessors and successors)
+        // Add edges between vertices (defined by the NodeInformationRetriever which knows how to get predecessors and successors)
         for (vertex in vertices) {
             nodeInformationRetriever.getPrecedingVertices(vertex, vertices)
                 .forEach { precedingVertex -> graph.addEdge(Edge(precedingVertex, vertex)) }
@@ -43,7 +43,7 @@ class GraphBuilder<T : Any>(
                 .forEach { succeedingVertex -> graph.addEdge(Edge(vertex, succeedingVertex)) }
         }
 
-        // remove redundant edges (if wanted)
+        // Remove redundant edges (if wanted)
         if (transitiveReduction) {
             val duration = measureTimeMillis { TransitiveReduction.reduce(graph) }
             logger.debug { "Removing superseded edges took ${duration}ms" }

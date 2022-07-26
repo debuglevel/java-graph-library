@@ -12,7 +12,7 @@ object GraphUtils {
         findVertex(start, end, ignoredEdge)
 
     /**
-     * Walk tree (starting from "start") to find vertex "breakCondition".
+     * Walk tree (starting from "start") to find [Vertex] "breakCondition".
      */
     private fun <T : Any> findVertex(
         start: Vertex<T>,
@@ -21,7 +21,7 @@ object GraphUtils {
     ): Boolean {
         val descendants =
             when {
-                // only filter if ignoredEdge is not null (i.e. we are on the first level of the recursive tree). Saves about 50% time.
+                // Only filter if ignoredEdge is not null (i.e. we are on the first level of the recursive tree). Saves about 50% time.
                 ignoredEdge != null -> start.outEdges
                     .filter { it !== ignoredEdge }
                     .map { it.end }
@@ -41,29 +41,29 @@ object GraphUtils {
     }
 
     /**
-     * Get all vertices which have no incoming edge
+     * Gets all [Vertices](Vertex) which have no incoming [Edge].
      */
     fun <T : Any> getStartVertices(graph: Graph<T>): List<Vertex<T>> {
         logger.trace { "Getting start vertices for graph..." }
         val startVertices = graph.vertices
-            .filter { it.inEdges.count() == 0 }
+            .filter { it.inEdges.isEmpty() }
         logger.trace { "Got ${startVertices.count()} start vertices for graph" }
         return startVertices
     }
 
     /**
-     * Get all vertices which have no outgoing edge
+     * Gets all [Vertices](Vertex) which have no outgoing [Edge].
      */
     fun <T : Any> getEndVertices(graph: Graph<T>): List<Vertex<T>> {
         logger.trace { "Getting end vertices for graph..." }
         val endVertices = graph.vertices
-            .filter { it.outEdges.count() == 0 }
+            .filter { it.outEdges.isEmpty() }
         logger.trace { "Got ${endVertices.count()} end vertices for graph" }
         return endVertices
     }
 
     /**
-     * Assign ascending numbers from start vertices to end vertices.
+     * Assigns ascending numbers from start to end [Vertices](Vertex).
      */
     fun <T : Any> populateOrders(graph: Graph<T>) {
         logger.trace { "Populating orders for graph..." }
@@ -89,12 +89,12 @@ object GraphUtils {
     }
 
     /**
-     * Search for cycles
+     * Searches for cycles.
      */
     fun <T : Any> findCycles(graph: Graph<T>): Boolean {
         logger.trace { "Searching cycles in graph..." }
         var startVertices =
-            getStartVertices(graph) // TODO: might not find isolated cycles or graphs that only consist of 1 circle
+            getStartVertices(graph) // TODO: Might not find isolated cycles or graphs that only consist of 1 circle
 
         if (startVertices.isEmpty() && graph.vertices.any()) {
             // of no start vertex is found but the graph actually has vertices, just pick a random one
@@ -111,19 +111,20 @@ object GraphUtils {
     private fun <T : Any> findCycles(vertex: Vertex<T>, visitedVertices: List<Vertex<T>>): Boolean {
         val newVisitedVertices = listOf(*visitedVertices.toTypedArray(), vertex)
 
-        // check if current visited vertex was already visited before
+        // Check if current visited vertex was already visited before
         if (visitedVertices.contains(vertex)) {
             logger.info {
                 "Found cycle in graph while visiting '$vertex' in this path: ${
                     newVisitedVertices.joinToString("→")
                 }"
             }
-            // return true if cycle is found
+            // Return true if cycle is found
             return true
         }
 
         val successors = vertex.outEdges.map { edge -> edge.end }
-        val cyclesFound = successors.map { succeedingVertex -> findCycles(succeedingVertex, newVisitedVertices) }
+        val cyclesFound = successors
+            .map { succeedingVertex -> findCycles(succeedingVertex, newVisitedVertices) }
             .any { it }
         return cyclesFound
     }
